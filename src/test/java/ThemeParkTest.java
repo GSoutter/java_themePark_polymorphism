@@ -2,6 +2,7 @@ import attractions.Dodgems;
 import attractions.Park;
 import attractions.Playground;
 import attractions.RollerCoaster;
+import behaviours.IReviewed;
 import org.junit.Before;
 import org.junit.Test;
 import people.Visitor;
@@ -9,6 +10,8 @@ import stalls.CandyflossStall;
 import stalls.IceCreamStall;
 import stalls.ParkingSpot;
 import stalls.TobaccoStall;
+
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -46,12 +49,12 @@ public class ThemeParkTest {
         themePark = new ThemePark();
 
         themePark.addStall(candyflossStall);
-        themePark.addStall(tobaccoStall);
+        themePark.addStall(tobaccoStall); // min age 18
         themePark.addStall(iceCreamStall);
         themePark.addAttraction(park);
         themePark.addAttraction(dodgems);
-        themePark.addAttraction(rollerCoaster);
-        themePark.addAttraction(playground);
+        themePark.addAttraction(rollerCoaster); // has security of over 145cm and 12year
+        themePark.addAttraction(playground); // need to be under 15
     }
 
 
@@ -74,5 +77,17 @@ public class ThemeParkTest {
         themePark.visitAttraction(visitor, rollerCoaster);
         assertEquals(1, visitor.getVisitedAttractions().size());
         assertEquals(1, rollerCoaster.getVisitCount());
+    }
+
+    @Test
+    public void canGetHashOfReviews() {
+        HashMap<String, Integer> result = themePark.getReviewHash();
+        assertEquals((Integer)9, result.get("Leafy Meadows"));
+    }
+
+    @Test
+    public void canGetAllAllowed() {
+        Visitor visitor2 = new Visitor(11, 1.2, 40.0);
+        assertEquals(5, themePark.getAllAllowed(visitor2).size());
     }
 }
